@@ -19,3 +19,6 @@
    uvicorn app.main:app --reload --port 8000
    ```
 
+3.## Live Demo
+
+[🚀 View Campus Care AI](https://campus-care-ai-gules.vercel.app/)
