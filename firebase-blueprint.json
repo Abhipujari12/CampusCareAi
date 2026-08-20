@@ -1,0 +1,133 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Represents a college user (student, staff, admin, or superadmin)",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "fullName": { "type": "string" },
+        "role": { "type": "string", "enum": ["student", "staff", "admin", "superadmin"] },
+        "department": { "type": "string" },
+        "phone": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "fullName", "role", "createdAt"]
+    },
+    "Complaint": {
+      "title": "Complaint",
+      "description": "A student maintenance or repair complaint ticket",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "building": { "type": "string" },
+        "roomNumber": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "assigned", "in-progress", "resolved", "closed"] },
+        "priority": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "studentId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "studentEmail": { "type": "string" },
+        "assignedStaffId": { "type": "string" },
+        "assignedStaffName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "resolvedAt": { "type": "string", "format": "date-time" },
+        "imageUrl": { "type": "string" },
+        "staffProofUrl": { "type": "string" },
+        "feedbackRating": { "type": "number" },
+        "feedbackComments": { "type": "string" }
+      },
+      "required": ["id", "title", "description", "category", "building", "roomNumber", "status", "priority", "studentId", "studentName", "createdAt"]
+    },
+    "Comment": {
+      "title": "Comment",
+      "description": "A communication message left under a complaint ticket by students, staff, or admin",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "complaintId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userRole": { "type": "string" },
+        "text": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "complaintId", "userId", "userName", "userRole", "text", "createdAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "Alert notification targeted to a specific user",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "type": { "type": "string" },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "complaintId": { "type": "string" }
+      },
+      "required": ["id", "title", "message", "read", "createdAt"]
+    },
+    "Announcement": {
+      "title": "Announcement",
+      "description": "Public notice broadcasted to targeted groups",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "targetRoles": { "type": "array" },
+        "authorName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "content", "targetRoles", "authorName", "createdAt"]
+    },
+    "UserSettings": {
+      "title": "UserSettings",
+      "description": "Notification and preferences settings for a user",
+      "type": "object",
+      "properties": {
+        "emailEnabled": { "type": "boolean" },
+        "inAppEnabled": { "type": "boolean" },
+        "pushEnabled": { "type": "boolean" },
+        "smsEnabled": { "type": "boolean" },
+        "whatsappEnabled": { "type": "boolean" },
+        "emailAddress": { "type": "string" },
+        "phoneNumber": { "type": "string" },
+        "pushPermission": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Collection of user registration details"
+    },
+    "/complaints/{complaintId}": {
+      "schema": { "$ref": "#/entities/Complaint" },
+      "description": "Main collection of student complaints"
+    },
+    "/complaints/{complaintId}/comments/{commentId}": {
+      "schema": { "$ref": "#/entities/Comment" },
+      "description": "Sub-collection of comments under a complaint"
+    },
+    "/users/{userId}/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "Sub-collection of notifications for a user"
+    },
+    "/users/{userId}/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/UserSettings" },
+      "description": "Sub-collection of settings for a user (e.g. notifications)"
+    },
+    "/announcements/{announcementId}": {
+      "schema": { "$ref": "#/entities/Announcement" },
+      "description": "Global announcements list"
+    }
+  }
+}

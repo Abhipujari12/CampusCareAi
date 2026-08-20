@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  # 🌐 FastAPI Backend Application Container
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:securepassword@db:5432/campuscare
+      - SECRET_KEY=your_development_secret_signing_key_32_characters
+      - JWT_ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=60
+    depends_on:
+      - db
+
+  # 🐘 PostgreSQL Local Development Database
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: securepassword
+      POSTGRES_DB: campuscare
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
